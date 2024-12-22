@@ -1,0 +1,15 @@
+@startuml overall
+!theme plain
+
+rectangle <&script>GmailDriveETL as script {
+  rectangle <&envelope-closed>Gmail as gmail {
+  }
+  rectangle <&spreadsheet>Spreadsheet as spreadsheet {
+  }
+  rectangle <&folder>Folder as folder {
+  }
+}
+
+gmail -> spreadsheet : <&pencil>
+gmail --> folder : <&image>
+@enduml

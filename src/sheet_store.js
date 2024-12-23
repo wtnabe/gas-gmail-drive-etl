@@ -163,7 +163,7 @@ class SheetStore {
 
       return this.app.newCellImage()
         .setSourceUrl(thumbnailFile.getUrl())
-        .setAlteTextTitle(file.getName())
+        .setAltTextTitle(file.getName())
         .build()
     } else {
       return false

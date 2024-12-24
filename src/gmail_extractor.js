@@ -1,3 +1,4 @@
+/* global GmailApp */
 /// <reference types="google-apps-script" />
 /// <reference path="./sheet_store.js" />
 /// <reference path="./folder_store.js" />

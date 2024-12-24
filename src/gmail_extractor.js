@@ -105,6 +105,17 @@ class GmailExtractor {
 
     return `https://mail.google.com/mail/u/0/#search/rfc822msgid${encodeURIComponent(':' + stripped)}`
   }
+
+  /**
+   * @see https://en.wikipedia.org/wiki/Signature_block
+   * @param {string} body
+   * @returns {string}
+   */
+  stripSignature (body) {
+    const usenetDelimiter = '^-- '
+
+    return body.replace(new RegExp(`\r\n${usenetDelimiter}\r\n.+`, 'sm'), '')
+  }
 }
 
 /**

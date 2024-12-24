@@ -60,4 +60,24 @@ describe('GmailExtractor', () => {
       assert.equal(extractor.messageSearchUrl('<abc>'), 'https://mail.google.com/mail/u/0/#search/rfc822msgid%3Aabc')
     })
   })
+
+  describe('#stripSignature', () => {
+    it('not include signature line', () => {
+      assert.equal(extractor.stripSignature('abc'), 'abc')
+    })
+
+    it('includes signature delimiter', () => {
+      assert.equal(
+        extractor.stripSignature([
+          'body',
+          'lines',
+          '',
+          '-- ',
+          'name <email@example.com>',
+          '  department position contact'
+        ].join('\r\n')),
+        'body\r\nlines\r\n'
+      )
+    })
+  })
 })

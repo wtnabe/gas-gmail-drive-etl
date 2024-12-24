@@ -27,13 +27,13 @@ class GmailExtractor {
     /** @type {object} 検索queryのobject表現（文字列検索は q を利用）*/
     this.query = query || { after: todayString, has: 'attachment' }
     /** @type {Function} */
-    this.filter = filter ? filter.bind(this) : (() => true)
+    this.filter = filter ? filter.bind(this) : () => true
     /** @type {SheetStore} */
     this.sheetStore = sheetStore
     /** @type {FolderStore} */
     this.folderStore = folderStore
     /** @type {Function} */
-    this.extractProcess = extractProcess ? extractProcess.bind(this) : (() => {})
+    this.extractProcess = extractProcess ? extractProcess.bind(this) : () => {}
   }
 
   /**

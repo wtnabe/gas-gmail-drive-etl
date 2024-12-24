@@ -87,7 +87,7 @@ class GmailExtractor {
   extractIds (message, withLink = true) {
     const ids = [message.getId()]
     if (withLink) {
-      ids.push(this.messageSearchUrl(message.getHeader('Message-Id').replace(/^</, '').replace(/>$/, '')))
+      ids.push(this.messageSearchUrl(message.getHeader('Message-Id')))
     }
 
     return ids
@@ -101,7 +101,9 @@ class GmailExtractor {
    * @returns {string}
    */
   messageSearchUrl (messageId) {
-    return `https://mail.google.com/mail/u/0/#search/rfc822msgid${encodeURIComponent(':' + messageId)}`
+    const stripped = messageId.replace(/^</, '').replace(/>$/, '')
+
+    return `https://mail.google.com/mail/u/0/#search/rfc822msgid${encodeURIComponent(':' + stripped)}`
   }
 }
 

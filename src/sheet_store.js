@@ -41,16 +41,15 @@ class SheetStore {
    * @param {GoogleAppsScript.Gmail.GmailMessage} params.message
    * @param {array} params.cols
    * @param {GoogleAppsScript.Drive.File[]} params.files
-   * @param {GmailExtractor} params.gmailExtractor
    * @param {boolean} params.withIdLink
    * @param {FolderStore|undefined} params.withThumbnailLink
    * @returns {array} - 保存した値の配列
    */
-  store ({ message, cols, files, gmailExtractor, withIdLink, withThumbnailLink }) {
+  store ({ message, cols, files, withIdLink, withThumbnailLink }) {
     files = typeof files !== 'undefined' ? files : []
 
     const row = [
-      ...gmailExtractor.extractIds(message, withIdLink),
+      ...extractIds(message, withIdLink),
       ...cols,
       ...files.map((file) => file.getId())
     ]

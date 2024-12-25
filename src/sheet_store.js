@@ -1,3 +1,4 @@
+/* global SpreadsheetApp, extractIds */
 /// <reference types="google-apps-script" />
 /// <reference path="./gmail_extractor.js" />
 /// <reference path="./folder_store.js" />

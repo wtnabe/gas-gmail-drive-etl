@@ -107,7 +107,7 @@ function extractProcess (message, sheetStore, folderStore) {
       m.getSubject(),
       extractBody(m.getPlainBody())
     ]
-    sheetStore.store({ message, cols, files: attachedFiles, gmailExtractor: this })
+    sheetStore.store({ message, cols, files: attachedFiles })
     console.log(`Gmail message id ${message.getId()} stored.`)
   } else {
     console.log(`Gmail message id ${message.getId()} has been skipped extracting. Already done.`)

@@ -39,18 +39,23 @@ class GmailExtractor {
 
   /**
    * extract本体
+   *
+   * @returns {any[] | null}
    */
   execute () {
     const threads = this.search(this.buildQuery(this.query))
 
-    threads.filter((thread) => {
+    const results = threads.filter((thread) => {
       return !thread.isInSpam() && !thread.isInTrash()
-    }).forEach((thread) => {
+    }).flatMap((thread) => {
       const messages = this.app.getMessagesForThread(thread)
-      messages.filter(this.filter).forEach((message) => {
-        this.extractProcess(message, this.sheetStore, this.folderStore)
-      })
+      return messages.filter(this.filter).map((message) => {
+        const result = this.extractProcess(message, this.sheetStore, this.folderStore)
+        return result ? result : null
+      }).filter((e) => e)
     })
+
+    return results.length > 0 ? results : null
   }
 
   /**

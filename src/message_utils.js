@@ -39,3 +39,15 @@ function stripSignature (body) { // eslint-disable-line no-unused-vars
 
   return body.replace(new RegExp(`\r\n${usenetDelimiter}\r\n.+`, 'sm'), '')
 }
+
+/**
+ * 0を頭に付けたうえで末尾の2文字を取り出す
+ *
+ * @param {string} num
+ * @returns {string}
+ */
+function s2 (num) { // eslint-disable-line no-unused-vars
+  const s = '0' + num
+
+  return s.substring(s.length - 2, s.length)
+}

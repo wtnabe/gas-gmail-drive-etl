@@ -81,6 +81,25 @@ class GmailExtractor {
       return (k === 'q') ? v : `${k}:${v}`
     }).join(' ')
   }
+
+  /**
+   * message の Date から local timezone の日付文字列を得る
+   *
+   * @param {object} params
+   * @param {GoogleAppsScript.Gmail.GmailMessage} params.message
+   * @param {boolean} params.withTime
+   * @param {string} params.sep
+   * @returns {string}
+   */
+  attachmentTimestamp ({ message, withTime = false, sep = '' }) {
+    const d = message.getDate()
+
+    const date = [d.getFullYear(), s2(d.getMonth() + 1), s2(d.getDate())].join(sep)
+
+    return withTime
+      ? date + [s2(d.getHours()), s2(d.getMinutes()), s2(d.getSeconds())].join(sep)
+      : date
+  }
 }
 
 /**

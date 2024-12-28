@@ -27,4 +27,30 @@ describe('GmailExtractor', () => {
       assert(extractor.filter())
     })
   })
+
+  describe('#attachmentTimestamp', () => {
+    const fakeMessage = {
+      getDate () {
+        return new Date('2024-12-28T00:00:00+0900')
+      }
+    }
+
+    describe('default date', () => {
+      it('returns 8 digit string', () => {
+        assert.equal(
+          extractor.attachmentTimestamp({ message: fakeMessage }),
+          '20241228'
+        )
+      })
+    })
+
+    describe('with time', () => {
+      it('returns 12 digit string', () => {
+        assert.equal(
+          extractor.attachmentTimestamp({ message: fakeMessage, withTime: true }),
+          '20241228000000'
+        )
+      })
+    })
+  })
 })

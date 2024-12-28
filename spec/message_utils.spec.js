@@ -2,7 +2,7 @@ import { describe, it } from 'vitest'
 import assert from 'node:assert'
 import gas from 'gas-local'
 
-const app = gas.require(import.meta.dirname + '/../src')
+const app = gas.require(import.meta.dirname + '/../src', { console })
 
 describe('message utils', () => {
   describe('#extractIds', () => {
@@ -55,6 +55,16 @@ describe('message utils', () => {
         ].join('\r\n')),
         'body\r\nlines\r\n'
       )
+    })
+  })
+
+  describe('#s2', () => {
+    it('1', () => {
+      assert.equal(app.s2(1), '01')
+    })
+
+    it('11', () => {
+      assert.equal(app.s2('11'), '11')
     })
   })
 })

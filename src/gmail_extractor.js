@@ -1,4 +1,4 @@
-/* global GmailApp */
+/* global GmailApp, s2 */
 /// <reference types="google-apps-script" />
 /// <reference path="./sheet_store.js" />
 /// <reference path="./folder_store.js" />
@@ -15,9 +15,10 @@ class GmailExtractor {
    * @param {SheetStore} params.sheetStore
    * @param {FolderStore} params.folderStore
    * @param {Function} params.extractProcess - 実際にmessageから取り出す処理
+   * @param {string} params.attachmentPrefix - 保存するファイル名のprefix 'date' | 'time'
    */
   constructor ({
-    app, query, filter, sheetStore, folderStore, extractProcess
+    app, query, filter, sheetStore, folderStore, extractProcess, attachmentPrefix
   }) {
     const d = new Date()
     const today = new Date(d.getFullYear(), d.getMonth(), d.getDate())
@@ -33,12 +34,14 @@ class GmailExtractor {
     this.sheetStore = sheetStore
     /** @type {FolderStore} */
     this.folderStore = folderStore
+    /** @type {string} */
+    this.attachmentPrefix = attachmentPrefix ? attachmentPrefix : 'date'
     /** @type {Function} */
     this.extractProcess = extractProcess ? extractProcess.bind(this) : () => {}
   }
 
   /**
-   * extract本体
+   * 全体の流れ
    *
    * @returns {any[] | null}
    */
@@ -50,7 +53,7 @@ class GmailExtractor {
     }).flatMap((thread) => {
       const messages = this.app.getMessagesForThread(thread)
       return messages.filter(this.filter).map((message) => {
-        const result = this.extractProcess(message, this.sheetStore, this.folderStore)
+        const result = this.extract(message)
         return result ? result : null
       }).filter((e) => e)
     })
@@ -83,6 +86,41 @@ class GmailExtractor {
   }
 
   /**
+   * @param {GoogleAppsScript.Gmail.GmailMessage} message
+   * @returns {any[] | null}
+   */
+  extract (message) {
+    const attachedFiles = this.folderStore
+          ? this.storeAttachments(message)
+          : []
+
+    return this.extractProcess(message, this.sheetStore, attachedFiles)
+  }
+
+  /**
+   * @param {GoogleAppsScript.Gmail.GmailMessage} message
+   * @returns {GoogleAppsScript.Drive.File[]}
+   */
+  storeAttachments (message) {
+    return message.getAttachments().map((attachment) => {
+      return this.folderStore.store(
+        attachment,
+        this.attachmentTimestamp({
+          message,
+          withTime: this.attachmentPrefix === 'time'
+        })
+      )
+    })
+  }
+
+  /**
+   * @returns {string[]}
+   */
+  attachmentPrefixOrder () {
+    return ['date', 'time']
+  }
+
+  /**
    * message の Date から local timezone の日付文字列を得る
    *
    * @param {object} params
@@ -110,6 +148,7 @@ class GmailExtractor {
  * @param {SheetStore} params.sheetStore
  * @param {FolderStore} params.folderStore
  * @param {Function} params.extractProcess - 実際にmessageから取り出す処理
+   * @param {string} params.attachmentPrefix - 保存するファイル名のprefix 'date' | 'time'
  * @returns {GmailExtractor}
  */
 function createGmailExtractor (params) { // eslint-disable-line no-unused-vars

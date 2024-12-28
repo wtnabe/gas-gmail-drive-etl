@@ -14,13 +14,14 @@ class FolderStore {
 
   /**
    * @param {GoogleAppsScript.Gmail.GmailAttachment} attachment
+   * @param {string} timestamp
    * @returns {GoogleAppsScript.Drive.File} - 保存したファイル
    */
-  store (attachment) {
+  store (attachment, timestamp) {
     const a = attachment
 
     const file = this.folder.createFile(a.getAs(a.getContentType()))
-    file.setName(a.getName())
+    file.setName([timestamp, a.getName()].join(' '))
 
     return file
   }

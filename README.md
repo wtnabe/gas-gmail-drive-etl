@@ -68,7 +68,7 @@ function query () {
  * @returns {boolean}
  */
 function filter (message) {
-  return message.
+  ..
 }
 
 /**
@@ -83,12 +83,13 @@ function filter (message) {
  * @param {GoogleAppsScript.Gmail.GmailMessage} message
  * @param {GmailDriveETL.SheetStore} sheetStore
  * @param {GmailDriveETL.FolderStore} folderStore
+ * @param {GoogleAppsScript.Drive.File[]} attachedFiles
  * @returns {void}
  */
-function extractProcess (message, sheetStore, folderStore) {
+function extractProcess (message, sheetStore, folderStore, attachedFiles) {
   /**
    * @param {string} body
-   * @returns {string}
+   * @returns {string[]}
    */
   function exractBody (body) {
     return ..
@@ -96,23 +97,12 @@ function extractProcess (message, sheetStore, folderStore) {
 
   const m = message
 
-  if (!sheetStore.messageExists(m)) {
-    const attachedFiles = m.getAttachments().map((attachment)) => {
-      return folderStore.store(attachment)
-    }
-
-    const cols = [
-      m.getFrom(),
-      m.getDate(),
-      m.getSubject(),
-      extractBody(m.getPlainBody())
-    ]
-    sheetStore.store({ message, cols, files: attachedFiles })
-    console.log(`Gmail message id ${message.getId()} stored.`)
-  } else {
-    console.log(`Gmail message id ${message.getId()} has been skipped extracting. Already done.`)
-  }
+  const cols = [
+    m.getFrom(),
+    m.getDate(),
+    m.getSubject(),
+    extractBody(m.getPlainBody())
+  ]
+  sheetStore.store({ message, cols, files: attachedFiles })
 }
 ```
-
-###

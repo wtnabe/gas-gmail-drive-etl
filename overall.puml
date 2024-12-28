@@ -1,15 +1,44 @@
 @startuml overall
 !theme plain
 
-rectangle <&script>GmailDriveETL as script {
+allowmixing
+
+rectangle "Data Flow" as flow {
   rectangle <&envelope-closed>Gmail as gmail {
   }
   rectangle <&spreadsheet>Spreadsheet as spreadsheet {
   }
   rectangle <&folder>Folder as folder {
   }
+  gmail --> spreadsheet : <&pencil>
+  gmail --> folder : <&image>
 }
 
-gmail -> spreadsheet : <&pencil>
-gmail --> folder : <&image>
+rectangle <&script>GmailDriveETL as script {
+  rectangle " " as klass {
+    class GmailExtractor {
+      sheetStore: SheetStore
+      folderStore: FolderStore
+      extractProcess() <- **give as callback**
+    }
+    class SheetStore {
+      spreadSheet : SpreadSheet
+      sheet : SpreadSheet.Sheet
+      store()
+    }
+    class FolderStore {
+      folder: Drive.Folder
+      store()
+    }
+    rectangle "extractProcess()" as extractProcess {
+    }
+    rectangle "filter()" as filter {
+    }
+
+    GmailExtractor *-u- SheetStore
+    GmailExtractor *-u- FolderStore
+    GmailExtractor *--- extractProcess
+    GmailExtractor *... filter
+  }
+}
 @enduml

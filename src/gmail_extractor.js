@@ -90,11 +90,16 @@ class GmailExtractor {
    * @returns {any[] | null}
    */
   extract (message) {
-    const attachedFiles = this.folderStore
-          ? this.storeAttachments(message)
-          : []
+    if (!this.sheetStore.messageExists(message)) {
+      const attachedFiles = this.folderStore
+            ? this.storeAttachments(message)
+            : []
 
-    return this.extractProcess(message, this.sheetStore, attachedFiles)
+      console.log(`will store message ${message.getId()} ...`)
+      return this.extractProcess(message, this.sheetStore, this.folderStore, attachedFiles)
+    } else {
+      console.log(`skipped message ${message.getId()}`)
+    }
   }
 
   /**

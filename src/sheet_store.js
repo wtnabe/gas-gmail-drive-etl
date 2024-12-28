@@ -80,9 +80,7 @@ class SheetStore {
       const fileCol = this.findFileColumnInRow(rowpos, file)
       const fileCell = this.getCell(rowpos, fileCol)
 
-      const link = (typeof folderStore !== 'undefined')
-        ? (this.imageLinkToFile(file, folderStore) || this.richTextLinkToFile(file))
-        : this.richTextLinkToFile(file)
+      const link = this.richTextLinkToFile(file)
 
       if (link) {
         fileCell.setRichTextValue(link)

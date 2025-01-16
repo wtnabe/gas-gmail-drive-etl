@@ -18,6 +18,7 @@ Useful for managing your unique status of issues in your Gmail inbox.
     * [Class GmailMessage  \|  Apps Script  \|  Google for Developers](https://developers.google.com/apps-script/reference/gmail/gmail-message)
     * [Class GmailAttachment  \|  Apps Script  \|  Google for Developers](https://developers.google.com/apps-script/reference/gmail/gmail-attachment)
     * [Class Folder  \|  Apps Script  \|  Google for Developers](https://developers.google.com/apps-script/reference/drive/folder)
+ 6. can control around extraction process
 
 ### How to Use
 
@@ -42,7 +43,11 @@ function main () {
     filter,
     extractProcess
   })
-  exatractor.execute()
+  const results = extractor.execute()
+
+  if (results) {
+    // <- write after-extract-process here.
+  }
 }
 
 /**
@@ -84,17 +89,9 @@ function filter (message) {
  * @param {GmailDriveETL.SheetStore} sheetStore
  * @param {GmailDriveETL.FolderStore} folderStore
  * @param {GoogleAppsScript.Drive.File[]} attachedFiles
- * @returns {void}
+ * @returns {Object} - anything
  */
 function extractProcess (message, sheetStore, folderStore, attachedFiles) {
-  /**
-   * @param {string} body
-   * @returns {string[]}
-   */
-  function exractBody (body) {
-    return ..
-  }
-
   const m = message
 
   const cols = [
@@ -104,5 +101,16 @@ function extractProcess (message, sheetStore, folderStore, attachedFiles) {
     extractBody(m.getPlainBody())
   ]
   sheetStore.store({ message, cols, files: attachedFiles })
+  console.log('Gmail message id ${m.getId()} stored.`)
+
+  return cols.slice[0, 3]
+}
+
+/**
+ * @param {string} body
+ * @returns {string}
+ */
+function extractBody (body) {
+  return GmailDriveETL.stripSignature(body)
 }
 ```
